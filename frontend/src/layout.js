@@ -3,7 +3,7 @@ import Header from './header.js';
 
 export default function Layout(){
     return (
-        <main>
+        <main className="p-2.5 max-w-2xl mx-auto">
             <Header/>
             <Outlet/>
         </main>

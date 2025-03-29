@@ -1,4 +1,3 @@
-import './RegisterPage.css';
 import { useState } from "react";
 
 export default function RegisterPage(){
@@ -30,17 +29,17 @@ export default function RegisterPage(){
     }
 
     return(
-        <form className="register" onSubmit={register}>
-            <h1>Register</h1>
-            <input type="text"
+        <form className="max-w-xl m-auto" onSubmit={register}>
+            <h1 className="text-center">Register</h1>
+            <input type="text" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
                     placeholder="Enter Username"
                     value={username}
                     onChange={ev => setUsername(ev.target.value)}/>
-            <input type="password"
+            <input type="password" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
                     placeholder="Enter Password"
                     value={password}
                     onChange={ev => setPassword(ev.target.value)}/>
-            <button>Register</button>
+            <button  className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white">Register</button>
         </form>
     );
 }

@@ -1,4 +1,3 @@
-import './App.css';
 import { Route, Routes } from "react-router-dom";
 import Layout from './layout';
 import LoginPage from "./pages/LoginPage/LoginPage.js";
