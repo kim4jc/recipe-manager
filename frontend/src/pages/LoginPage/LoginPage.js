@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+const dotenv = require('dotenv');
+dotenv.config({ path: '../.env' });
 
-export default function LoginPage(){
+const BACKEND_PORT = process.env.BACKEND_PORT;
+
+export default function LoginPage( { setHeaderUsername }){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [redirect, setRedirect] = useState('');
@@ -9,7 +13,8 @@ export default function LoginPage(){
     async function login(ev){
         ev.preventDefault();
         try{
-            const response = await fetch('http://localhost:4000/login', {
+            console.log("before fetch on login");
+            const response = await fetch(`http://localhost:${BACKEND_PORT}/login`, {
                 method: 'POST',
                 headers:{
                     'content-type': 'application/json'
@@ -21,6 +26,9 @@ export default function LoginPage(){
                 credentials: 'include',
             });
             if(response.ok){
+                const resData = await response.json();
+                console.log("before setHeaderUsername on login");
+                setHeaderUsername(resData.username);
                 setRedirect(true);
             }
             else{

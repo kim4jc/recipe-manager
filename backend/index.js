@@ -5,13 +5,18 @@ const User = require('./models/user.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
 app = express();
 
+dotenv.config({ path: '../.env' });
+const BACKEND_PORT = process.env.BACKEND_PORT;
+const FRONTEND_PORT = process.env.FRONTEND_PORT;
 const salt = bcrypt.genSaltSync(10);
 const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors({credentials:true,origin:'http://localhost:3000'}));
+app.use(cors({credentials:true,origin:`http://localhost:${FRONTEND_PORT}`}));
 app.use(express.json());
+app.use(cookieParser());
 
 connectToDB();
 
@@ -60,4 +65,26 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.listen(4000);
+app.get('/profile', (req, res) => {
+    console.log("/profile called");
+    if(!req.cookies){
+        return;
+    }
+    const {token} = req.cookies;
+    if(!token){
+        return;
+    }
+    jwt.verify(token, JWT_SECRET, {}, (err, info) => {
+        if(err) throw err;
+        console.log("before jwt payload return");
+        res.json(info);
+    });
+});
+
+app.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.status(200).json("Logged out");
+});
+
+
+app.listen(BACKEND_PORT);

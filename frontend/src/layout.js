@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import Header from './header.js';
 
-export default function Layout(){
+export default function Layout({ headerUsername, setHeaderUsername }){
     return (
         <main className="p-2.5 max-w-2xl mx-auto">
-            <Header/>
+            <Header headerUsername={headerUsername} setHeaderUsername={setHeaderUsername}/>
             <Outlet/>
         </main>
     );

@@ -1,4 +1,9 @@
 import { useState } from "react";
+const dotenv = require('dotenv');
+dotenv.config({ path: '../.env' });
+
+const BACKEND_PORT = process.env.BACKEND_PORT;
+
 
 export default function RegisterPage(){
     const [username, setUsername] = useState('');
@@ -7,7 +12,7 @@ export default function RegisterPage(){
     async function register(ev){
         ev.preventDefault();
         try{
-            const response = await fetch('http://localhost:4000/register', {
+            const response = await fetch(`http://localhost:${BACKEND_PORT}/register`, {
                 method: 'POST',
                 headers:{
                     'content-type': 'application/json',
