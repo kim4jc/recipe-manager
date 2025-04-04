@@ -18,19 +18,41 @@ export default function Header(){
         })
 
         const resData = await response.json();
+        console.log(resData, "from profile");
         //set username to username in jwt payload
-        setHeaderUsername(resData.user.username);
+        setHeaderUsername(resData?.user?.username);
       };
-  
 
       //call async function
       resInfo();
     }
     catch(err){
-      console.error(err);
+      console.error("Error fetching profile:", err);
     }
-  }, [headerUsername]);
+  }, []);
 
+  /*
+  useEffect(() => {
+    const resInfo = async () => {
+      try {
+        console.log("Fetching /profile...");
+        const response = await fetch(`${REACT_APP_BACKEND_API_URL}/profile`, {
+          credentials: 'include',
+        });
+  
+        console.log("Response status:", response.status);
+        const resData = await response.json();
+        console.log("Response data:", resData);
+  
+        setHeaderUsername(resData?.user?.username || '');
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      }
+    };
+  
+    resInfo();
+  }, []);
+*/
   async function logout(){
     await fetch(`${REACT_APP_BACKEND_API_URL}/logout`, {
       method: 'POST',

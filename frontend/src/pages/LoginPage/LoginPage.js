@@ -26,7 +26,8 @@ export default function LoginPage(){
             });
             if(response.ok){
                 const resData = await response.json();
-                setHeaderUsername(resData.username);
+                console.log(resData);
+                setHeaderUsername(resData.user.username);
                 setRedirect(true);
             }
             else{

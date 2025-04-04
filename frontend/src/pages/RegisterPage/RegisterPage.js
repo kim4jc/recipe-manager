@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate } from 'react-router-dom';
 
 const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
@@ -6,6 +7,8 @@ const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 export default function RegisterPage(){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [redirect, setRedirect] = useState('');
+
 
     async function register(ev){
         ev.preventDefault();
@@ -22,6 +25,7 @@ export default function RegisterPage(){
             });
             if (response.ok) {
                 alert('Registration successful!');
+                setRedirect(true);
             } else {
                 alert('Registration failed');
             }
@@ -31,6 +35,9 @@ export default function RegisterPage(){
         }
     }
 
+    if (redirect){
+        return <Navigate to={'/login'} />
+    }
     return(
         <form className="max-w-xl m-auto" onSubmit={register}>
             <h1 className="text-center">Register</h1>

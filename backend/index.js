@@ -53,7 +53,7 @@ app.post('/login', async (req, res) => {
         }
         jwt.sign(payload, JWT_SECRET, {}, (err, token) => {
             if(err) throw err;
-            res.cookie('token', token).json({ username: username, message: "Successful login" });
+            res.cookie('token', token).json({ user: {username: username, id: userDoc._id}, message: "Successful login" });
         });
     }
     else{
@@ -65,7 +65,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.get('/profile', (req, res) => {
+/*app.get('/profile', (req, res) => {
     if(!req.cookies){
         return;
     }
@@ -77,7 +77,24 @@ app.get('/profile', (req, res) => {
         if(err) throw err;
         res.json(info);
     });
-});
+});*/
+app.get('/profile', (req, res) => {
+    const { token } = req.cookies;
+    if (!token) {
+      console.log("No token found");
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+  
+    jwt.verify(token, JWT_SECRET, {}, (err, info) => {
+      if (err) {
+        console.error("JWT verification error:", err);
+        res.status(401).json({ message: "Invalid token" });
+        return;
+      }
+      res.json(info);
+    });
+  });
 
 app.post('/logout', (req, res) => {
     res.clearCookie('token');
