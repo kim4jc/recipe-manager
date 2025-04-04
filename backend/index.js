@@ -8,13 +8,13 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 app = express();
 
-dotenv.config({ path: '../.env' });
+dotenv.config();
 const BACKEND_PORT = process.env.BACKEND_PORT;
-const FRONTEND_PORT = process.env.FRONTEND_PORT;
+const FRONTEND_API_URL = process.env.FRONTEND_API_URL;
 const salt = bcrypt.genSaltSync(10);
 const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors({credentials:true,origin:`http://localhost:${FRONTEND_PORT}`}));
+app.use(cors({credentials:true,origin:`${FRONTEND_API_URL}`}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -53,7 +53,7 @@ app.post('/login', async (req, res) => {
         }
         jwt.sign(payload, JWT_SECRET, {}, (err, token) => {
             if(err) throw err;
-            res.cookie('token', token).json('Successful Login');
+            res.cookie('token', token).json({ username: username, message: "Successful login" });
         });
     }
     else{
@@ -66,7 +66,6 @@ app.post('/login', async (req, res) => {
 })
 
 app.get('/profile', (req, res) => {
-    console.log("/profile called");
     if(!req.cookies){
         return;
     }
@@ -76,7 +75,6 @@ app.get('/profile', (req, res) => {
     }
     jwt.verify(token, JWT_SECRET, {}, (err, info) => {
         if(err) throw err;
-        console.log("before jwt payload return");
         res.json(info);
     });
 });

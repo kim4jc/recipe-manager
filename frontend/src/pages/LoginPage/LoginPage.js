@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-const dotenv = require('dotenv');
-dotenv.config({ path: '../.env' });
+import UserContext from '../../UserContext.js';
 
-const BACKEND_PORT = process.env.BACKEND_PORT;
+const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-export default function LoginPage( { setHeaderUsername }){
+export default function LoginPage(){
+    const {setHeaderUsername, headerUsername} = useContext(UserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [redirect, setRedirect] = useState('');
@@ -13,8 +14,7 @@ export default function LoginPage( { setHeaderUsername }){
     async function login(ev){
         ev.preventDefault();
         try{
-            console.log("before fetch on login");
-            const response = await fetch(`http://localhost:${BACKEND_PORT}/login`, {
+            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/login`, {
                 method: 'POST',
                 headers:{
                     'content-type': 'application/json'
@@ -27,7 +27,6 @@ export default function LoginPage( { setHeaderUsername }){
             });
             if(response.ok){
                 const resData = await response.json();
-                console.log("before setHeaderUsername on login");
                 setHeaderUsername(resData.username);
                 setRedirect(true);
             }

@@ -3,6 +3,7 @@ import Layout from './layout';
 import LoginPage from "./pages/LoginPage/LoginPage.js";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.js";
 import CreateRecipePage from "./pages/CreateRecipePage/CreateRecipePage.js";
+import UserContext from "./UserContext.js";
 
 import { useState } from "react";
 
@@ -10,13 +11,15 @@ function App() {
   const [headerUsername, setHeaderUsername] = useState('');
 
   return (
+    <UserContext.Provider value={{ headerUsername, setHeaderUsername }}>
     <Routes>
-      <Route path="/" element={<Layout headerUsername={headerUsername} setHeaderUsername={setHeaderUsername}/>}>
-        <Route path={'/login'} element={<LoginPage setHeaderUsername={setHeaderUsername}/> }/>
+      <Route path="/" element={<Layout/>}>
+        <Route path={'/login'} element={<LoginPage/> }/>
         <Route path={'/register'} element={<RegisterPage />}/>
         <Route path={'/create'} element={<CreateRecipePage />}/>
       </Route>
     </Routes>
+    </UserContext.Provider>
   );
 }
 

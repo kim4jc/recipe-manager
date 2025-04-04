@@ -1,27 +1,24 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
-const dotenv = require('dotenv');
-dotenv.config({ path: '../.env' });
+import { useEffect, useContext } from "react";
+import UserContext from "./UserContext.js";
 
-const BACKEND_PORT = process.env.BACKEND_PORT;
+const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
+export default function Header(){
 
-export default function Header( { headerUsername, setHeaderUsername }){
+  const {headerUsername, setHeaderUsername} = useContext(UserContext);
 
   useEffect(() => {
     try{
       //async function to receive jwt payload
       const resInfo = async () => {
 
-        console.log("before fetch on profile");
-        const response = await fetch(`http://localhost:${BACKEND_PORT}/profile`, {
+        const response = await fetch(`${REACT_APP_BACKEND_API_URL}/profile`, {
         credentials: 'include',
         })
 
         const resData = await response.json();
-        console.log(resData.user.username);
         //set username to username in jwt payload
-        console.log("before setHeaderUsername on header.js");
         setHeaderUsername(resData.user.username);
       };
   
@@ -35,7 +32,7 @@ export default function Header( { headerUsername, setHeaderUsername }){
   }, [headerUsername]);
 
   async function logout(){
-    await fetch(`http://localhost:${BACKEND_PORT}/logout`, {
+    await fetch(`${REACT_APP_BACKEND_API_URL}/logout`, {
       method: 'POST',
       credentials: 'include',
     })
