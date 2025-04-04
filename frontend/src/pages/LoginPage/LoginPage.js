@@ -1,12 +1,11 @@
 import { useState, useContext } from 'react';
-import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import UserContext from '../../UserContext.js';
 
 const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export default function LoginPage(){
-    const {setHeaderUsername, headerUsername} = useContext(UserContext);
+    const {setHeaderUsername} = useContext(UserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [redirect, setRedirect] = useState('');
