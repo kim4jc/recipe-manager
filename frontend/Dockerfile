@@ -1,17 +1,13 @@
-# Use an official Node.js image as the base image.
-FROM node:14
-
-# Create and change to the app directory.
+# Stage 1: Build the React app
+FROM node:22 as builder
 WORKDIR /app
-
-# Copy package.json and package-lock.json (if available) and install dependencies.
 COPY package*.json ./
 RUN npm install
-# Copy the rest of your application code.
-COPY . .
+COPY . ./
+RUN npm run build
 
-# Expose the port that your app runs on.
-EXPOSE 3000
-
-# Start the React application.
-CMD ["npm", "start"]
+# Stage 2: Serve with Nginx
+FROM nginx:latest
+COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

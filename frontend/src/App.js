@@ -4,14 +4,13 @@ import LoginPage from "./pages/LoginPage/LoginPage.js";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.js";
 import CreateRecipePage from "./pages/CreateRecipePage/CreateRecipePage.js";
 import UserContext from "./UserContext.js";
-
 import { useState } from "react";
 
 function App() {
   const [headerUsername, setHeaderUsername] = useState('');
-
+  const [redirect, setRedirect] = useState(false);
   return (
-    <UserContext.Provider value={{ headerUsername, setHeaderUsername }}>
+    <UserContext.Provider value={{ headerUsername, setHeaderUsername, redirect, setRedirect }}>
     <Routes>
       <Route path="/" element={<Layout/>}>
         <Route path={'/login'} element={<LoginPage/> }/>

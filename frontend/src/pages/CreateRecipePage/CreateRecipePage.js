@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Navigate } from 'react-router-dom';
+import UserContext from "../../UserContext.js";
+
+const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export default function CreateRecipePage(){
-
+    const {redirect, setRedirect } = useContext(UserContext);
+    const [recipeName, setRecipeName] = useState('');
+    const [cuisine, setCuisine] = useState('');
     const [difficulty, setDifficulty] = useState(1);
+    const [imgFile, setImgFile] = useState('');
     const [ingredients, setIngredients] = useState([""]);
     const [steps, setSteps] = useState([""]);
 
@@ -46,17 +53,67 @@ export default function CreateRecipePage(){
         setSteps(updatedSteps); //array will now be the same as before but with a new empty string element, therefore it will map another textarea for the new empty string element.
     }
 
+    async function handleCreateRecipe(ev){
+        ev.preventDefault();
+        if(!recipeName || !cuisine || !difficulty || !ingredients || !steps)
+            {
+                alert('Please fill in all required fields.');
+                return;
+            }
+        try{
+            const filteredIngredients = ingredients.filter((ingredient)=>ingredient !== "");
+            const filteredSteps = steps.filter((step)=>step !== "");
+            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/create`,{
+                method: 'POST',
+                headers:{
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    recipeName: recipeName,
+                    cuisine: cuisine,
+                    difficulty: difficulty,
+                    imgFile: imgFile,
+                    ingredients: filteredIngredients,
+                    steps: filteredSteps,
+                })
+            });
+            if (response.ok) {
+                alert('successful!');
+                console.log(response);
+                setRedirect(true);
+            } else {
+                alert('failed');
+            }
+        }
+        catch(e){
+            console.log("Error: ", e);
+        }
+    }
+    if (redirect){
+        setRedirect(false);
+        return <Navigate to={'/'} />
+    }
     return(
-        <form className="max-w-xl m-auto" onSubmit={(e) => e.preventDefault()}>
+        <form className="max-w-xl m-auto" onSubmit={(handleCreateRecipe)}>
 
             <div className="w-full justify-center items-center py-1 px-1 mb-8 justify-between border-2 rounded bg-gray-100">
                 <h2 className="text-center">Recipe Name</h2>
-                <input type="title" placeholder={'Recipe Name'} className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"/>
+                <input 
+                    className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
+                    type="title" 
+                    placeholder={'Recipe Name'} 
+                    value={recipeName}
+                    onChange={ev=> setRecipeName(ev.target.value)}/>
             </div>
 
             <div className="w-full justify-center items-center py-1 px-1 mb-8 justify-between border-2 rounded bg-gray-100">
                 <h2 className="text-center">Cuisine</h2>
-                <input type="text" placeholder={'Type of Cuisine'} className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"/>
+                <input 
+                    className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
+                    type="text" 
+                    placeholder={'Type of Cuisine'} 
+                    value={cuisine}
+                    onChange={ev=> setCuisine(ev.target.value)}/>
             </div>
 
             <div className="w-full border-2 bg-gray-100 rounded max-w-xl m-auto mb-8">
@@ -81,32 +138,37 @@ export default function CreateRecipePage(){
 
         <div className="w-full justify-center items-center py-1 px-1 mb-8 justify-between border-2 rounded bg-gray-100">
             <h2 className="text-center">Upload a Photo</h2>
-            <input type="file" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"/>
+            <input type="file" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
+            value={imgFile}
+            onChange={ev=> setImgFile(ev.target.value)}/>
         </div>
 
         <ul className="max-w-xl m-auto mb-10 border-2 bg-gray-100 rounded">
             <h1 className="text-center">Ingredients</h1>
             {ingredients.map((ingredient, index) => (
                 <li key={index} className={`${ingredients.length > 1 ? "flex":""}`}>
-                <input  type="text" 
+                <input  
                     className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-3"
+                    type="text" 
                     placeholder={`Ingredient ${index + 1}: `}
                     value={ingredient}
-                    onChange={(e)=>(handleIngredientChange(e.target.value, index))}
+                    onChange={(ev)=>(handleIngredientChange(ev.target.value, index))}
                 />
                 {/*only show remove ingredient button if there is more than 1 ingredient*/}
                     {ingredients.length > 1 &&
-                        (<button type='button'
-                                 onClick={()=>(handleRemoveIngredient(index))} 
-                                 className="block px-1 py-1 border-2 text-sm rounded text-white bg-red-500 rounded mb-3">
-                                 Remove
+                        (<button 
+                            className="block px-1 py-1 border-2 text-sm rounded text-white bg-red-500 rounded mb-3"
+                            type='button'
+                            onClick={()=>(handleRemoveIngredient(index))}>
+                                Remove
                         </button>)
                     }
                 </li>
             ))}
-            <button type='button'
-                    onClick={handleAddIngredient} 
-                    className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white">
+            <button 
+                className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white"
+                type='button'
+                onClick={handleAddIngredient}>
                     Add Ingredient
             </button>
         </ul>
@@ -119,28 +181,31 @@ export default function CreateRecipePage(){
                     className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-3"
                     placeholder={`Step ${index + 1}: `}
                     value={step}
-                    onChange={(e)=>(handleStepChange(e.target.value, index))}
+                    onChange={(ev)=>(handleStepChange(ev.target.value, index))}
                 />
                 {/*only show remove step button if there is more than 1 ingredient*/}
                     {steps.length > 1 &&
-                        (<button type='button'
-                                 onClick={()=>(handleRemoveStep(index))} 
-                                 className="block px-1 py-1 border-2 text-sm rounded text-white bg-red-500 rounded mb-3">
+                        (<button 
+                            className="block px-1 py-1 border-2 text-sm rounded text-white bg-red-500 rounded mb-3"
+                            type='button'
+                            onClick={()=>(handleRemoveStep(index))} >
                                  Remove
                         </button>)
                     }
                 </li>
             ))}
-            <button type='button'
-                    onClick={handleAddStep} 
-                    className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white">
+            <button 
+                className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white"
+                type='button'
+                onClick={handleAddStep} >
                     Add Step
             </button>
         </ul>
 
-        <button type='button'
-            className="block mb-15 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white">
-            Create Recipe
+        <button 
+            className="block mb-15 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white"
+            type="submit">
+                Create Recipe
         </button>
     </form>
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const RecipeSchema = new Schema({
-    recipe_name: {
+    recipeName: {
         type: String,
         required: true,
         trim: true
@@ -12,7 +12,13 @@ const RecipeSchema = new Schema({
         required: true,
         trim: true
     },
-    img_file:{
+    difficulty:{
+        type: Number,
+        required: true,
+        min: 1,
+        max: 5,
+    },
+    imgFile:{
         type: String
     },
     ingredients:{

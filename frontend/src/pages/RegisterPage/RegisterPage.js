@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Navigate } from 'react-router-dom';
+import UserContext from '../../UserContext.js';
+
 
 const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 
 export default function RegisterPage(){
+    const {redirect, setRedirect } = useContext(UserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [redirect, setRedirect] = useState('');
 
 
     async function register(ev){
@@ -36,20 +38,26 @@ export default function RegisterPage(){
     }
 
     if (redirect){
+        setRedirect(false);
         return <Navigate to={'/login'} />
     }
     return(
         <form className="max-w-xl m-auto" onSubmit={register}>
             <h1 className="text-center">Register</h1>
-            <input type="text" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
-                    placeholder="Enter Username"
-                    value={username}
-                    onChange={ev => setUsername(ev.target.value)}/>
-            <input type="password" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
-                    placeholder="Enter Password"
-                    value={password}
-                    onChange={ev => setPassword(ev.target.value)}/>
-            <button  className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white">Register</button>
+            <input className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
+                type="text" 
+                placeholder="Enter Username"
+                value={username}
+                onChange={ev => setUsername(ev.target.value)}/>
+            <input className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
+                type="password" 
+                placeholder="Enter Password"
+                value={password}
+                onChange={ev => setPassword(ev.target.value)}/>
+            <button className="block mb-1 w-full py-1 px-2 border-2 rounded bg-gray-600 text-white"
+                type="submit">
+                Register
+            </button>
         </form>
     );
 }
