@@ -5,14 +5,14 @@ import UserContext from '../../UserContext.js';
 const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export default function LoginPage(){
-    const {setHeaderUsername, redirect, setRedirect } = useContext(UserContext);
+    const { setHeaderUsername, redirect, setRedirect } = useContext(UserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     async function login(ev){
         ev.preventDefault();
         try{
-            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/login`, {
+            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/api/login`, {
                 method: 'POST',
                 headers:{
                     'content-type': 'application/json'
@@ -44,8 +44,9 @@ export default function LoginPage(){
         return <Navigate to={'/'} />
     }
     return(
-        <form className="max-w-xl m-auto" onSubmit={login}>
-            <h1 className="text-center">Login</h1>
+        <div className='h-screen w-full flex'>
+        <form className="max-w-xl w-full m-auto border-2 p-4 rounded bg-gray-300 mt-[12%]" onSubmit={login}>
+            <h1 className="text-center mb-2">Login</h1>
             <input 
                 className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
                 type="text" 
@@ -64,5 +65,6 @@ export default function LoginPage(){
                 Login
             </button>
         </form>
+        </div>
     );
 }

@@ -15,7 +15,7 @@ export default function RegisterPage(){
     async function register(ev){
         ev.preventDefault();
         try{
-            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/register`, {
+            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/api/register`, {
                 method: 'POST',
                 headers:{
                     'content-type': 'application/json',
@@ -42,8 +42,9 @@ export default function RegisterPage(){
         return <Navigate to={'/login'} />
     }
     return(
-        <form className="max-w-xl m-auto" onSubmit={register}>
-            <h1 className="text-center">Register</h1>
+        <div className='h-screen w-full flex'>
+        <form className="max-w-xl w-full border-2 bg-gray-300 rounded p-4 m-auto mt-[12%]" onSubmit={register}>
+            <h1 className="text-center mb-2">Register</h1>
             <input className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
                 type="text" 
                 placeholder="Enter Username"
@@ -59,5 +60,6 @@ export default function RegisterPage(){
                 Register
             </button>
         </form>
+        </div>
     );
 }

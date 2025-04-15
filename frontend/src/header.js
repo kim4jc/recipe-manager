@@ -9,52 +9,27 @@ export default function Header(){
   const {headerUsername, setHeaderUsername} = useContext(UserContext);
 
   useEffect(() => {
-    try{
       //async function to receive jwt payload
       const resInfo = async () => {
-
-        const response = await fetch(`${REACT_APP_BACKEND_API_URL}/profile`, {
-        credentials: 'include',
-        })
-
-        const resData = await response.json();
-        console.log(resData, "from profile");
-        //set username to username in jwt payload
-        setHeaderUsername(resData?.user?.username);
-      };
-
-      //call async function
-      resInfo();
-    }
-    catch(err){
-      console.error("Error fetching profile:", err);
-    }
-  }, []);
-
-  /*
-  useEffect(() => {
-    const resInfo = async () => {
-      try {
-        console.log("Fetching /profile...");
-        const response = await fetch(`${REACT_APP_BACKEND_API_URL}/profile`, {
+        try{
+          const response = await fetch(`${REACT_APP_BACKEND_API_URL}/api/profile`, {
           credentials: 'include',
-        });
-  
-        console.log("Response status:", response.status);
-        const resData = await response.json();
-        console.log("Response data:", resData);
-  
-        setHeaderUsername(resData?.user?.username || '');
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-      }
+          });
+
+          const resData = await response.json();
+          console.log(resData, "from profile");
+          //set username to username in jwt payload
+          setHeaderUsername(resData?.user?.username);
+        }
+        catch(err){
+          console.error("Error fetching profile:", err);
+        }
     };
-  
     resInfo();
   }, []);
-*/
+
   async function logout(){
-    await fetch(`${REACT_APP_BACKEND_API_URL}/logout`, {
+    await fetch(`${REACT_APP_BACKEND_API_URL}/api/logout`, {
       method: 'POST',
       credentials: 'include',
     })
@@ -62,7 +37,7 @@ export default function Header(){
   }
 
     return(
-      <header className="flex justify-between mb-12">
+      <header className="flex justify-between mb-5">
         <Link to="/" className="font-bold">Recipe Manager</Link>
           <nav className="flex gap-4">
             {/*If username in jwt payload (logged in) display links to create, search, and logout*/}
@@ -70,7 +45,7 @@ export default function Header(){
               <>
               <Link to="/create">Create New Recipe</Link>
               <Link to="/search">Search</Link>
-              <a onClick={logout}>Logout</a>
+              <button onClick={logout}>Logout</button>
               </>
             )}
             {/*If !username in jwt payload (not logged in) display links to login and register*/}

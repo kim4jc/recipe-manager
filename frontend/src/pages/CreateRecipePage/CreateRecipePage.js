@@ -63,8 +63,9 @@ export default function CreateRecipePage(){
         try{
             const filteredIngredients = ingredients.filter((ingredient)=>ingredient !== "");
             const filteredSteps = steps.filter((step)=>step !== "");
-            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/create`,{
+            const response = await fetch(`${REACT_APP_BACKEND_API_URL}/api/create`,{
                 method: 'POST',
+                credentials: 'include',
                 headers:{
                     'content-type': 'application/json',
                 },
@@ -94,7 +95,7 @@ export default function CreateRecipePage(){
         return <Navigate to={'/'} />
     }
     return(
-        <form className="max-w-xl m-auto" onSubmit={(handleCreateRecipe)}>
+        <form className="max-w-xl mt-12 m-auto" onSubmit={(handleCreateRecipe)}>
 
             <div className="w-full justify-center items-center py-1 px-1 mb-8 justify-between border-2 rounded bg-gray-100">
                 <h2 className="text-center">Recipe Name</h2>

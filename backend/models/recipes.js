@@ -2,15 +2,20 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const RecipeSchema = new Schema({
+    userID:{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     recipeName: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
     },
     cuisine:{
         type: String,
         required: true,
-        trim: true
+        trim: true,
     },
     difficulty:{
         type: Number,
@@ -19,7 +24,7 @@ const RecipeSchema = new Schema({
         max: 5,
     },
     imgFile:{
-        type: String
+        type: String,
     },
     ingredients:{
         type: [String],
