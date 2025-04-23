@@ -5,6 +5,8 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.js";
 import CreateRecipePage from "./pages/CreateRecipePage/CreateRecipePage.js";
 import MainPage from "./pages/MainPage/MainPage.js";
 import RecipePage from "./pages/RecipePage/RecipePage.js";
+import EditRecipePage from "./pages/EditRecipePage/EditRecipePage.js";
+import SearchPage from "./pages/SearchPage/SearchPage.js";
 import UserContext from "./UserContext.js";
 import { useState } from "react";
 
@@ -20,6 +22,8 @@ function App() {
         <Route path={'/register'} element={<RegisterPage />}/>
         <Route path={'/create'} element={<CreateRecipePage />}/>
         <Route path={'/recipe/:recipeId'} element={<RecipePage />}/>
+        <Route path={'/edit/:recipeId'} element={<EditRecipePage />}/>
+        <Route path={'/search'} element={<SearchPage />}/>
       </Route>
     </Routes>
     </UserContext.Provider>
