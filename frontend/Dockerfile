@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:22 as builder
+FROM node:22 AS builder
 WORKDIR /app
 
 ARG REACT_APP_BACKEND_API_URL
