@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import UserContext from "../../UserContext.js";
 
-const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
+const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL || "";
 
 export default function CreateRecipePage(){
     const navigate = useNavigate();

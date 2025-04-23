@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from "../../UserContext.js";
 import { useParams } from "react-router-dom";
 
-const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
+const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL || "";
 
 export default function EditRecipePage(){
     const navigate = useNavigate();

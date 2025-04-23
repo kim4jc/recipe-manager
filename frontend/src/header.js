@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import UserContext from "./UserContext.js";
 
-const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
+const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL || "";
 
 export default function Header(){
 
