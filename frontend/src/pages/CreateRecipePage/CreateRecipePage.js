@@ -1,10 +1,12 @@
-import { useState, useContext } from "react";
-import { Navigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from "react";
+import { Navigate, useNavigate } from 'react-router-dom';
 import UserContext from "../../UserContext.js";
 
 const REACT_APP_BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export default function CreateRecipePage(){
+    const navigate = useNavigate();
+    const { headerUsername } = useContext(UserContext);
     const {redirect, setRedirect } = useContext(UserContext);
     const [recipeName, setRecipeName] = useState('');
     const [cuisine, setCuisine] = useState('');
@@ -13,6 +15,12 @@ export default function CreateRecipePage(){
     const [ingredients, setIngredients] = useState([""]);
     const [steps, setSteps] = useState([""]);
 
+    useEffect(() => {
+        if (!headerUsername) {
+            navigate('/');
+        }
+    }, [headerUsername, navigate]);
+    
     function handleDifficultyClick(rating){
         setDifficulty(rating);
     }
@@ -61,22 +69,25 @@ export default function CreateRecipePage(){
                 return;
             }
         try{
-            const filteredIngredients = ingredients.filter((ingredient)=>ingredient !== "");
-            const filteredSteps = steps.filter((step)=>step !== "");
+            const filteredIngredients = ingredients.filter((ingredient)=>ingredient.trim() !== "");
+            const filteredSteps = steps.filter((step)=>step.trim() !== "");
+
+            const formData = new FormData();
+
+            formData.append('recipeName', recipeName);
+            formData.append('cuisine', cuisine);
+            formData.append('difficulty', difficulty);
+            formData.append('ingredients', JSON.stringify(filteredIngredients));
+            formData.append('steps', JSON.stringify(filteredSteps));
+            //only append imgFile if it exists
+            if(imgFile){
+                formData.append('imgFile', imgFile); // Append the file object
+            }
+
             const response = await fetch(`${REACT_APP_BACKEND_API_URL}/api/create`,{
                 method: 'POST',
                 credentials: 'include',
-                headers:{
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify({
-                    recipeName: recipeName,
-                    cuisine: cuisine,
-                    difficulty: difficulty,
-                    imgFile: imgFile,
-                    ingredients: filteredIngredients,
-                    steps: filteredSteps,
-                })
+                body: formData,
             });
             if (response.ok) {
                 alert('successful!');
@@ -90,6 +101,7 @@ export default function CreateRecipePage(){
             console.log("Error: ", e);
         }
     }
+
     if (redirect){
         setRedirect(false);
         return <Navigate to={'/'} />
@@ -139,9 +151,10 @@ export default function CreateRecipePage(){
 
         <div className="w-full justify-center items-center py-1 px-1 mb-8 justify-between border-2 rounded bg-gray-100">
             <h2 className="text-center">Upload a Photo</h2>
-            <input type="file" className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
-            value={imgFile}
-            onChange={ev=> setImgFile(ev.target.value)}/>
+            <input className="w-full block py-1 px-1 border-2 border-gray-100 rounded bg-white mb-1"
+            type="file" 
+            accept="image/*"
+            onChange={ev=> setImgFile(ev.target.files[0])}/>
         </div>
 
         <ul className="max-w-xl m-auto mb-10 border-2 bg-gray-100 rounded">
